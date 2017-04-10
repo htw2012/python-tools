@@ -3,8 +3,12 @@
 """
 title= "
 lr模型，支持三种训练方法：
-1.
+1.gd
+2.sgd
+3.smooth-sgd
 
+梯度下降：
+grda
 "
 author= "huangtw"
 ctime = 2017/04/10
@@ -12,7 +16,6 @@ ctime = 2017/04/10
 import time
 
 from numpy import *
-
 
 # calculate the sigmoid function
 def sigmoid(inX):
@@ -35,35 +38,40 @@ def fit(train_x, train_y, opts):
     print("opts", opts)
     weights = ones((numFeatures, 1)) # 权值为n*1
 
-    # optimize through gradient descent algorilthm
+    # 梯度下降的基本原理是delta_theta=-eta*grad_E
     for k in range(maxIter):
+
         if opts['optimizeType'] == 'gradDescent': # 单纯的梯度下降法
             output = sigmoid(train_x * weights)
-            error = train_y - output
-            weights = weights + alpha * train_x.transpose() * error
+            grad_weight = train_x.transpose() * (output - train_y)  # 梯度部分
+            delta_weight = - alpha * grad_weight
+            weights += delta_weight  # 梯度下降
 
         elif opts['optimizeType'] == 'stocGradDescent': # 随机梯度下降法
-            for i in range(numSamples):
+            for i in range(numSamples):  # 一次训练完才算一个epoch
                 output = sigmoid(train_x[i, :] * weights)
-                error = train_y[i, 0] - output
-                weights = weights + alpha * train_x[i, :].transpose() * error
+                grad_weight = train_x[i, :].transpose() * (output - train_y[i, 0])
+                delta_weight = - alpha * grad_weight
+                weights += delta_weight
 
         elif opts['optimizeType'] == 'smoothStocGradDescent': # smooth SGD
             # randomly select samples to optimize for reducing cycle fluctuations
             dataIndex = range(numSamples)
             for i in range(numSamples):
-                alpha = 4.0 / (1.0 + k + i) + 0.01
                 randIndex = int(random.uniform(0, len(dataIndex)))
                 output = sigmoid(train_x[randIndex, :] * weights)
-                error = train_y[randIndex, 0] - output
-                weights = weights + alpha * train_x[randIndex, :].transpose() * error
+                grad_weight = (output - train_y[randIndex, 0]) * train_x[randIndex, :].transpose()
+
+                alpha = 4.0 / (1.0 + k + i) + 0.01
+                delta_weight = - alpha * grad_weight
+                weights += delta_weight
+
                 del(dataIndex[randIndex]) # during one interation, delete the optimized sample
         else:
             raise NameError('Not support optimize method type!')
 
     print 'training complete! Took %fs!' % (time.time() - startTime)
     return weights
-
 
 def evaluate(weights, test_x, test_y):
     '''
