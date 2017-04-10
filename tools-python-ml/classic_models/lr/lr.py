@@ -61,8 +61,7 @@ def fit(train_x, train_y, opts):
         else:
             raise NameError('Not support optimize method type!')
 
-
-    print 'Congratulations, training complete! Took %fs!' % (time.time() - startTime)
+    print 'training complete! Took %fs!' % (time.time() - startTime)
     return weights
 
 

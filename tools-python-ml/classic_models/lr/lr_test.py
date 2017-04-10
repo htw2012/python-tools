@@ -5,13 +5,14 @@ title= ""
 author= "huangtw"
 ctime = 2017/04/10
 """
-from numpy import *
+import matplotlib.pyplot as plt
 
 from lr import *
 
 
 # show your trained logistic regression model only available with 2-D data
 def showLogRegres(weights, train_x, train_y):
+
     # notice: train_x and train_y is mat datatype
     numSamples, numFeatures = shape(train_x)
     if numFeatures != 3:
@@ -21,18 +22,19 @@ def showLogRegres(weights, train_x, train_y):
     # draw all samples
     for i in xrange(numSamples):
         if int(train_y[i, 0]) == 0:
-            plt.plot(train_x[i, 1], train_x[i, 2], 'or')
+            plt.plot(train_x[i, 1], train_x[i, 2], 'or')  # 红点
         elif int(train_y[i, 0]) == 1:
-            plt.plot(train_x[i, 1], train_x[i, 2], 'ob')
+            plt.plot(train_x[i, 1], train_x[i, 2], 'ob')  # 蓝点
 
     # draw the classify line
     min_x = min(train_x[:, 1])[0, 0]
     max_x = max(train_x[:, 1])[0, 0]
     weights = weights.getA()  # convert mat to array
-    y_min_x = float(-weights[0] - weights[1] * min_x) / weights[2]
+    y_min_x = float(-weights[0] - weights[1] * min_x) / weights[2]  # y=w_0+w_1*x1+w_2*x2=0
     y_max_x = float(-weights[0] - weights[1] * max_x) / weights[2]
     plt.plot([min_x, max_x], [y_min_x, y_max_x], '-g')
-    plt.xlabel('X1'); plt.ylabel('X2')
+    plt.xlabel('X1')
+    plt.ylabel('X2')
     plt.show()
 
 def loadData():
