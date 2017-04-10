@@ -5,8 +5,10 @@ title= ""
 author= "huangtw"
 ctime = 2017/04/10
 """
-from lr import *
 from numpy import *
+
+from lr import *
+
 
 # show your trained logistic regression model only available with 2-D data
 def showLogRegres(weights, train_x, train_y):

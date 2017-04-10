@@ -9,9 +9,9 @@ lr模型，支持三种训练方法：
 author= "huangtw"
 ctime = 2017/04/10
 """
-from numpy import *
-import matplotlib.pyplot as plt
 import time
+
+from numpy import *
 
 
 # calculate the sigmoid function
